@@ -16,11 +16,11 @@ public:
 	~Color()
 	{}
 
-	const std::string start();
-	const std::string end();
+	const std::string start() const;
+	const std::string end() const;
 private:
 	const std::string text_color_;
 	const std::string back_color_;
 };
 
-extern Color error_col;
+extern const Color error_col;
