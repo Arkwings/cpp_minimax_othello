@@ -12,6 +12,9 @@ public:
         ~Othello()
         {}
 
+	friend std::ostream& operator<<(std::ostream& os, const Othello& game);
+	std::vector<int> PossibleMoves();
+	bool Update(const int& x, const int& y);
 
 private:
         const std::string player_one_;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
+#include <vector>
 
 #include "color.hpp"
 #include "othello.hpp"
