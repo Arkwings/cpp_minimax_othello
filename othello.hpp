@@ -13,6 +13,10 @@ public:
         {
 		for(int it = 0; it < BOARD_SIZE; ++it)
 			board_[it] = new int[BOARD_SIZE];
+		board_[BOARD_SIZE/2][BOARD_SIZE/2] = -1;
+		board_[BOARD_SIZE/2-1][BOARD_SIZE/2-1] = -1;
+		board_[BOARD_SIZE/2-1][BOARD_SIZE/2] = 1;
+		board_[BOARD_SIZE/2][BOARD_SIZE/2-1] = 1;	
 	}
 
         ~Othello()
@@ -29,6 +33,8 @@ public:
 
 	static const Color board_col_;
 	static const Color side_col_;
+	static const Color p1_col_;
+	static const Color p2_col_;
 private:
 	friend void printLine(std::ostream& os, const Othello& game, const int& line);
 
