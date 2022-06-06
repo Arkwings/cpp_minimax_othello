@@ -97,18 +97,25 @@ const std::vector<int> Othello::PossibleMoves(const int& player) const
 	return moves;
 }
 
-bool Othello::Update(const int& x, const int& y)
+void Othello::Update(const int& x, const int& y, const int& player)
 {
-
-	return true;
+	board_[x][y] = player;
 }
 
 bool Othello::Loop()
 {
-	std::cout << *this << std::endl;
-	const std::vector<int> moves = PossibleMoves(1);
-	for(int i = 0; i < int(moves.size()); i+=2)
+	int player = 1;
+	while(1)
+	{
+		std::cout << *this << std::endl;
+		
+		const std::vector<int> moves = PossibleMoves(1);
+		for(int i = 0; i < int(moves.size()); i+=2)
 		std::cout << char(int('a') + moves[i]) << moves[i+1]+1 << std::endl;
 
+		
+
+		player = -player;
+	}
 	return true;
 }

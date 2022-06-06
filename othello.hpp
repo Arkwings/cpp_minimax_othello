@@ -28,7 +28,7 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Othello& game);
 	const std::vector<int> PossibleMoves(const int& player) const;
-	bool Update(const int& x, const int& y);
+	void Update(const int& x, const int& y, const int& player);
 	bool Loop();
 
 	static const Color board_col_;

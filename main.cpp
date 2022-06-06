@@ -22,14 +22,14 @@ int argument_checks(const int& count, char ** arguments)
 	else
 	{
         	std::string p1(arguments[1]), p2(arguments[2]);
-        	if(p1 != "player" && !std::filesystem::exists(std::filesystem::path(p1))) 
+        	if(p1 != "human" && !std::filesystem::exists(std::filesystem::path(p1))) 
 		{ 
-			std::cerr << error_col.start() << "ERROR: player 1 is not a player and IA binary can not be found" << error_col.end() << std::endl; 
+			std::cerr << error_col.start() << "ERROR: player 1 is not a human or a valid IA binary" << error_col.end() << std::endl; 
 			wrong_arguments = true; 
 		}
-        	if(p2 != "player" && !std::filesystem::exists(std::filesystem::path(p2))) 
+        	if(p2 != "human" && !std::filesystem::exists(std::filesystem::path(p2))) 
 		{ 
-			std::cerr << error_col.start() << "ERROR: player 2 is not a player and IA binary can not be found" << error_col.end() << std::endl; 
+			std::cerr << error_col.start() << "ERROR: player 2 is not a human or a valid IA binary" << error_col.end() << std::endl; 
 			wrong_arguments = true; 
 		}
 		if(count == 4)
@@ -48,7 +48,7 @@ int argument_checks(const int& count, char ** arguments)
 
         if(wrong_arguments) 
 	{ 
-		std::cerr << error_col.start() <<  "command should be ./othello [IA1 binary | \"player\"] [IA2 binary | \"player\"] [optional:idle time]" << error_col.end() << std::endl; 
+		std::cerr << error_col.start() <<  "command should be ./othello [IA1 binary | \"human\"] [IA2 binary | \"human\"] [optional:idle time]" << error_col.end() << std::endl; 
 		return 1;
 	}
         return 0;
