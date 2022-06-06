@@ -1,11 +1,11 @@
 #pragma once
 
-Othello
+class Othello
 {
 public:
         Othello(const std::string& player_one, const std::string& player_two, const int& idle_time)
-        : player_one_(player_one),
-        , player_two_(player_two),
+        : player_one_(player_one)
+        , player_two_(player_two)
         , idle_time_(idle_time)
         {}
 
