@@ -54,6 +54,25 @@ std::ostream& operator<<(std::ostream& os, const Othello& game)
 
 bool Othello::possibleMove(const int& x, const int& y, const int& player) const
 {
+	int directions[] =
+	{  1,  0 //droite
+	, -1,  0 //gauche
+	,  0,  1 //bas
+	,  0, -1 //haut
+	,  1,  1 //droite-bas
+	,  1, -1 //droite-haut
+	, -1,  1 //gauche-bas
+	, -1, -1 //gauche-haut
+	};
+
+	for(int dir_it = 0; dir_it < sizeof(directions) / sizeof(int); dir_it+=2)
+	{
+		for(int x_it = x, y_it = y; x_it > -1 && y_it > -1 && x_it < BOARD_SIZE && y_it < BOARD_SIZE; x_it += directions[dir_it], y_it += directions[dir_it + 1])
+		{
+
+		}
+	}
+
 	return false;
 }
 
