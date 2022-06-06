@@ -65,11 +65,14 @@ bool Othello::possibleMove(const int& x, const int& y, const int& player) const
 	, -1, -1 //gauche-haut
 	};
 
-	for(int dir_it = 0; dir_it < sizeof(directions) / sizeof(int); dir_it+=2)
+	for(int dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)); dir_it+=2)
 	{
-		for(int x_it = x, y_it = y; x_it > -1 && y_it > -1 && x_it < BOARD_SIZE && y_it < BOARD_SIZE; x_it += directions[dir_it], y_it += directions[dir_it + 1])
+		bool oponent_found(false);
+		for(int x_it = x + directions[dir_it], y_it = y + directions[dir_it + 1]; x_it > -1 && y_it > -1 && x_it < BOARD_SIZE && y_it < BOARD_SIZE; x_it += directions[dir_it], y_it += directions[dir_it + 1])
 		{
-
+			if(board_[x_it][y_it] == 0 || (board_[x_it][y_it] == player && oponent_found == false)) break;
+			else if(board_[x_it][y_it] == player * -1) oponent_found = true;
+			else return true;
 		}
 	}
 
@@ -105,7 +108,7 @@ bool Othello::Loop()
 	std::cout << *this << std::endl;
 	const std::vector<int> moves = PossibleMoves(1);
 	for(int i = 0; i < int(moves.size()); i+=2)
-		std::cout << moves[i] << std::endl;
+		std::cout << char(int('a') + moves[i]) << moves[i+1]+1 << std::endl;
 
 	return true;
 }
