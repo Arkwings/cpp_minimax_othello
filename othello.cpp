@@ -52,9 +52,27 @@ std::ostream& operator<<(std::ostream& os, const Othello& game)
 	return os;
 }
 
-std::vector<int> Othello::PossibleMoves() const
+bool Othello::possibleMove(const int& x, const int& y, const int& player) const
 {
-	return std::vector<int>();
+	return false;
+}
+
+const std::vector<int> Othello::PossibleMoves(const int& player) const
+{
+	std::vector<int> moves;
+
+	for(int y_it = 0; y_it < BOARD_SIZE; ++y_it)
+	{
+		for(int x_it = 0; x_it < BOARD_SIZE; ++x_it)
+		{
+			if(possibleMove(x_it, y_it, player))
+			{
+				moves.push_back(x_it);
+				moves.push_back(y_it);
+			}
+		}
+	}
+	return moves;
 }
 
 bool Othello::Update(const int& x, const int& y)
@@ -66,5 +84,9 @@ bool Othello::Update(const int& x, const int& y)
 bool Othello::Loop()
 {
 	std::cout << *this << std::endl;
+	const std::vector<int> moves = PossibleMoves(1);
+	for(int i = 0; i < int(moves.size()); i+=2)
+		std::cout << moves[i] << std::endl;
+
 	return true;
 }
