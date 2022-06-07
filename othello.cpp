@@ -111,9 +111,10 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 {
 	bool valid_coords(false);
 	std::tuple<int, int> coords;
+	
+	system("clear && reset");
 	while(!valid_coords)
 	{
-		system("clear && reset");	
 		std::cout << *this << std::endl;	
 		std::cout << "[player " << (-player + 1)/2 + 1 << " turn] possible moves:" << std::endl;
 		for(int i = 0; i < int(moves.size()); i+=2)
