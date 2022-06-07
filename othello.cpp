@@ -14,6 +14,17 @@ const Color Othello::side_col_("231","22");
 const Color Othello::p1_col_("231", "232");
 const Color Othello::p2_col_("232", "231");
 
+int directions[] =
+	{  1,  0 //droite
+	, -1,  0 //gauche
+	,  0,  1 //bas
+	,  0, -1 //haut
+	,  1,  1 //droite-bas
+	,  1, -1 //droite-haut
+	, -1,  1 //gauche-bas
+	, -1, -1 //gauche-haut
+	};
+
 void printXCoords(std::ostream& os)
 {
 	os << "  " << Othello::side_col_.start();
@@ -58,17 +69,6 @@ std::ostream& operator<<(std::ostream& os, const Othello& game)
 
 bool Othello::possibleMove(const int& x, const int& y, const int& player) const
 {
-	int directions[] =
-	{  1,  0 //droite
-	, -1,  0 //gauche
-	,  0,  1 //bas
-	,  0, -1 //haut
-	,  1,  1 //droite-bas
-	,  1, -1 //droite-haut
-	, -1,  1 //gauche-bas
-	, -1, -1 //gauche-haut
-	};
-
 	for(int dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)); dir_it+=2)
 	{
 		bool oponent_found(false);
@@ -104,6 +104,26 @@ const std::vector<int> Othello::PossibleMoves(const int& player) const
 void Othello::Update(const int& x, const int& y, const int& player)
 {
 	board_[x][y] = player;
+
+	for(int dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)); dir_it+=2)
+	{
+		bool propagate(false);
+		bool oponent_found(false);
+		for(int x_it = x + directions[dir_it], y_it = y + directions[dir_it + 1]; x_it > -1 && y_it > -1 && x_it < BOARD_SIZE && y_it < BOARD_SIZE; x_it += directions[dir_it], y_it += directions[dir_it + 1])
+		{
+			if(board_[x_it][y_it] == 0 || (board_[x_it][y_it] == player && oponent_found == false)) break;
+			else if(board_[x_it][y_it] == player * -1) oponent_found = true;
+			else propagate = true;
+		}
+		if(propagate)
+		{
+			for(int x_it = x + directions[dir_it], y_it = y + directions[dir_it + 1]; x_it > -1 && y_it > -1 && x_it < BOARD_SIZE && y_it < BOARD_SIZE; x_it += directions[dir_it], y_it += directions[dir_it + 1])	
+			{
+				if(board_[x_it][y_it] == player * -1)	board_[x_it][y_it] = player;
+				else break;
+			}
+		}
+	}
 }
 
 template<class C>
