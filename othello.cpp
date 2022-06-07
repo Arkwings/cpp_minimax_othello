@@ -137,22 +137,34 @@ template void Othello::Play<MinMax>(const std::vector<int>& moves, const int& pl
 
 bool Othello::Loop()
 {
-	int player = 1;
-	std::string player_type = player_one_;
-	while(1)
+	bool end(false), passed(false);
+	int player(1);
+	std::string player_type(player_one_);
+	while(!end)
 	{	
 		const std::vector<int> moves = PossibleMoves(player);
 		
-		if(player_type == "human")		Play<Human>(moves, player);
-		else if(player_type == "minmax")	Play<MinMax>(moves, player);
-		else 
+		if(!moves.empty())
 		{
-			std::cerr << error_col.start() << "player type is not valid" << error_col.end() << std::endl;
-			exit(1);
+			passed = false;
+
+			if(player_type == "human")		Play<Human>(moves, player);
+			else if(player_type == "minmax")	Play<MinMax>(moves, player);
+			else 
+			{
+				std::cerr << error_col.start() << "player type is not valid" << error_col.end() << std::endl;
+				exit(1);
+			}
+		}
+		else
+		{
+			if(passed) end = true;
+			passed = true;
 		}
 		
 		player = -player;
 		player_type = (player == 1) ? player_one_: player_two_;
 	}
+	std::cout << board_col_.start() << "player " << (-player + 1)/2 + 1 << " wins !" << board_col_.end() << std::endl;
 	return true;
 }
