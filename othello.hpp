@@ -28,6 +28,7 @@ public:
 
 	friend std::ostream& operator<<(std::ostream& os, const Othello& game);
 	const std::vector<int> PossibleMoves(const int& player) const;
+	template<class C> void Play(const std::vector<int>& moves, const int& player);
 	void Update(const int& x, const int& y, const int& player);
 	bool Loop();
 

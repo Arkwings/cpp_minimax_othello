@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "color.hpp"
+#include "play.hpp"
 #include "othello.hpp"
 
 int argument_checks(const int& count, char ** arguments)
@@ -22,14 +23,14 @@ int argument_checks(const int& count, char ** arguments)
 	else
 	{
         	std::string p1(arguments[1]), p2(arguments[2]);
-        	if(p1 != "human" && !std::filesystem::exists(std::filesystem::path(p1))) 
+        	if(p1 != "human" && (p1 != "minmax" || !std::filesystem::exists(std::filesystem::path(p1)))) 
 		{ 
-			std::cerr << error_col.start() << "ERROR: player 1 is not a human or a valid IA binary" << error_col.end() << std::endl; 
+			std::cerr << error_col.start() << "ERROR: player 1 is not a human or a valid IA binary in Othello bin folder" << error_col.end() << std::endl; 
 			wrong_arguments = true; 
 		}
-        	if(p2 != "human" && !std::filesystem::exists(std::filesystem::path(p2))) 
+        	if(p2 != "human" && (p2 != "minmax" || !std::filesystem::exists(std::filesystem::path(p2))))
 		{ 
-			std::cerr << error_col.start() << "ERROR: player 2 is not a human or a valid IA binary" << error_col.end() << std::endl; 
+			std::cerr << error_col.start() << "ERROR: player 2 is not a human or a valid IA binary in Othello bin folder" << error_col.end() << std::endl; 
 			wrong_arguments = true; 
 		}
 		if(count == 4)
@@ -48,7 +49,7 @@ int argument_checks(const int& count, char ** arguments)
 
         if(wrong_arguments) 
 	{ 
-		std::cerr << error_col.start() <<  "command should be ./othello [IA1 binary | \"human\"] [IA2 binary | \"human\"] [optional:idle time]" << error_col.end() << std::endl; 
+		std::cerr << error_col.start() <<  "command should be ./othello [\"minmax\" | \"human\"] [\"minmax\" | \"human\"] [optional:idle time]" << error_col.end() << std::endl; 
 		return 1;
 	}
         return 0;

@@ -1,8 +1,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <tuple>
+#include <thread>
+#include <chrono>
 
 #include "color.hpp"
+#include "play.hpp"
 #include "othello.hpp"
 
 const Color Othello::board_col_("22","34");
@@ -102,20 +106,53 @@ void Othello::Update(const int& x, const int& y, const int& player)
 	board_[x][y] = player;
 }
 
+template<class C>
+void Othello::Play(const std::vector<int>& moves, const int& player)
+{
+	bool valid_coords(false);
+	std::tuple<int, int> coords;
+	while(!valid_coords)
+	{
+		system("clear && reset");	
+		std::cout << *this << std::endl;	
+		std::cout << "[player " << (-player + 1)/2 + 1 << " turn] possible moves:" << std::endl;
+		for(int i = 0; i < int(moves.size()); i+=2)
+			std::cout << "[" << char(int('a') + moves[i]) << moves[i+1]+1 << "] ";
+		std::cout << std::endl;
+
+		coords = C::Play();
+		for(int i = 0; i < int(moves.size()); i+=2)
+		{
+			if(std::get<0>(coords) == moves[i] && std::get<1>(coords) == moves[i+1])
+				valid_coords = true;
+		}
+		if(!valid_coords)
+			std::cerr << std::endl << error_col.start() << "coords [" << char(int('a') + std::get<0>(coords)) << std::get<1>(coords) + 1 << "] are not valid, please choose something else" << error_col.end() << std::endl;
+		std::this_thread::sleep_for(std::chrono::seconds(idle_time_));	
+	}
+	Update(std::get<0>(coords), std::get<1>(coords), player);
+}
+template void Othello::Play<Human>(const std::vector<int>& moves, const int& player);
+template void Othello::Play<MinMax>(const std::vector<int>& moves, const int& player);
+
 bool Othello::Loop()
 {
 	int player = 1;
+	std::string player_type = player_one_;
 	while(1)
-	{
-		std::cout << *this << std::endl;
+	{	
+		const std::vector<int> moves = PossibleMoves(player);
 		
-		const std::vector<int> moves = PossibleMoves(1);
-		for(int i = 0; i < int(moves.size()); i+=2)
-		std::cout << char(int('a') + moves[i]) << moves[i+1]+1 << std::endl;
-
+		if(player_type == "human")		Play<Human>(moves, player);
+		else if(player_type == "minmax")	Play<MinMax>(moves, player);
+		else 
+		{
+			std::cerr << error_col.start() << "player type is not valid" << error_col.end() << std::endl;
+			exit(1);
+		}
 		
-
 		player = -player;
+		player_type = (player == 1) ? player_one_: player_two_;
 	}
 	return true;
 }
