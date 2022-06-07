@@ -39,6 +39,7 @@ public:
 private:
 	friend void printLine(std::ostream& os, const Othello& game, const int& line);
 	bool possibleMove(const int& x, const int& y, const int& player) const;
+	void winner() const;
 
         const std::string player_one_;
         const std::string player_two_;

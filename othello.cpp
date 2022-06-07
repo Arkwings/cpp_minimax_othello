@@ -28,7 +28,7 @@ int directions[] =
 void printXCoords(std::ostream& os)
 {
 	os << "  " << Othello::side_col_.start();
-	for(char it = 'a'; it < 'i'; ++it)
+	for(char it = 'a'; it < char(int('a') + BOARD_SIZE); ++it)
 		os << " " << it;
 	os << Othello::side_col_.end() << std::endl;
 }
@@ -69,6 +69,7 @@ std::ostream& operator<<(std::ostream& os, const Othello& game)
 
 bool Othello::possibleMove(const int& x, const int& y, const int& player) const
 {
+	if(board_[x][y] != 0) return false;
 	for(int dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)); dir_it+=2)
 	{
 		bool oponent_found(false);
@@ -156,6 +157,27 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 template void Othello::Play<Human>(const std::vector<int>& moves, const int& player);
 template void Othello::Play<IA>(const std::vector<int>& moves, const int& player);
 
+void Othello::winner() const
+{
+	int p1_points(0), p2_points(0), empty(0), winner(0);
+	for(int it1 = 0; it1 < BOARD_SIZE; ++it1)
+	{
+		for(int it2 = 0; it2 < BOARD_SIZE; ++it2)
+		{
+			if(board_[it2][it1] == 1)	p1_points += 1;
+			if(board_[it2][it1] == -1)	p2_points += 1;	
+			if(board_[it2][it1] == 0)	empty += 1;	
+		}
+	}
+	
+	if(p1_points > p2_points) winner = 1;
+	else winner = -1;
+
+	std::cout << *this << std::endl;
+	std::cout << board_col_.start() << "player " << (-winner + 1)/2 + 1 << " wins !" << board_col_.end() << std::endl;	
+	std::cout << board_col_.start() << "stats [black:" << p1_points << " white:" << p2_points << " empty: " << empty << "] " << board_col_.end() << std::endl; 
+}
+
 bool Othello::Loop()
 {
 	bool end(false), passed(false);
@@ -181,6 +203,8 @@ bool Othello::Loop()
 		player = -player;
 		player_type = (player == 1) ? player_one_: player_two_;
 	}
-	std::cout << board_col_.start() << "player " << (-player + 1)/2 + 1 << " wins !" << board_col_.end() << std::endl;
+
+	winner();
+
 	return true;
 }

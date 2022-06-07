@@ -26,7 +26,6 @@ std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& playe
 		return std::tuple<int, int>(-1, -1);
 	}
 	
-	std::cout << "here" << std::endl;
 	return std::tuple<int, int>(int(input[0] - 'a'), int(input[1] - '1'));
 }
 
