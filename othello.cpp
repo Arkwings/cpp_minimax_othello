@@ -120,7 +120,7 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 			std::cout << "[" << char(int('a') + moves[i]) << moves[i+1]+1 << "] ";
 		std::cout << std::endl;
 
-		coords = C::Play();
+		coords = C::Play(moves, player, board_);
 		for(int i = 0; i < int(moves.size()); i+=2)
 		{
 			if(std::get<0>(coords) == moves[i] && std::get<1>(coords) == moves[i+1])
@@ -133,7 +133,7 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 	Update(std::get<0>(coords), std::get<1>(coords), player);
 }
 template void Othello::Play<Human>(const std::vector<int>& moves, const int& player);
-template void Othello::Play<MinMax>(const std::vector<int>& moves, const int& player);
+template void Othello::Play<IA>(const std::vector<int>& moves, const int& player);
 
 bool Othello::Loop()
 {
@@ -149,12 +149,7 @@ bool Othello::Loop()
 			passed = false;
 
 			if(player_type == "human")		Play<Human>(moves, player);
-			else if(player_type == "minmax")	Play<MinMax>(moves, player);
-			else 
-			{
-				std::cerr << error_col.start() << "player type is not valid" << error_col.end() << std::endl;
-				exit(1);
-			}
+			else					Play<IA>(moves, player);
 		}
 		else
 		{

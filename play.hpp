@@ -3,11 +3,11 @@
 class Human
 {
 public:
-	static std::tuple<int, int> Play();
+	static std::tuple<int, int> Play(const std::vector<int>& moves, const int& player, int** board);
 };
 
-class MinMax
+class IA
 {
 public:
-	static std::tuple<int, int> Play();
+	static std::tuple<int, int> Play(const std::vector<int>& moves, const int& player, int** board);
 };
