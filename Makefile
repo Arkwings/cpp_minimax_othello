@@ -4,7 +4,7 @@ CPPFLAGS =        # put pre-processor settings (-I, -D, etc) here
 CXXFLAGS = -std=c++20 -Wpedantic -pedantic-errors -Wall -Wextra  # put compiler settings here
 LDFLAGS =         # put linker settings here
 EXE = Othello
-OBJS=color.o play.o othello.o main.o
+OBJS=color.o named_pipe.o play.o othello.o main.o
 
 #DEBUG
 DBGDIR = debug

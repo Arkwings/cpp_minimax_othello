@@ -10,4 +10,6 @@ class IA
 {
 public:
 	static std::tuple<int, int> Play(const std::vector<int>& moves, const int& player, int** board);
+private:
+	static Pipe* IA_com_;
 };

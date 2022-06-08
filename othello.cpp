@@ -6,6 +6,7 @@
 #include <chrono>
 
 #include "color.hpp"
+#include "named_pipe.hpp"
 #include "play.hpp"
 #include "othello.hpp"
 
@@ -133,7 +134,7 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 	bool valid_coords(false);
 	std::tuple<int, int> coords;
 	
-	system("clear && reset");
+	system("clear");
 	while(!valid_coords)
 	{
 		std::cout << *this << std::endl;	
@@ -192,7 +193,7 @@ bool Othello::Loop()
 			passed = false;
 
 			if(player_type == "human")		Play<Human>(moves, player);
-			else					Play<IA>(moves, player);
+			else							Play<IA>(moves, player);
 		}
 		else
 		{

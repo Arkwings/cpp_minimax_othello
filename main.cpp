@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "color.hpp"
+#include "named_pipe.hpp"
 #include "play.hpp"
 #include "othello.hpp"
 

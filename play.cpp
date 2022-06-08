@@ -4,8 +4,11 @@
 #include <tuple>
 
 #include "color.hpp"
+#include "named_pipe.hpp"
 #include "play.hpp"
 #include "othello.hpp"
+
+Pipe* IA::IA_com_ = new Pipe("IA_named_pipe", 0777);
 
 std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& player, int** board)
 {
@@ -13,7 +16,7 @@ std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& playe
 	std::string input;
 	std::cin >> input;
 
-	system("clear && reset");	
+	system("clear");	
 
 	if(input.size() != 2)
 	{
@@ -31,6 +34,19 @@ std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& playe
 
 std::tuple<int, int> IA::Play(const std::vector<int>& moves, const int& player, int** board)
 {
-	return std::tuple<int, int>(0, 0);
+	std::string text;
+
+	text.push_back(char(int('0') + player));
+	for(int it1 = 0; it1 < BOARD_SIZE; ++it1)
+	{
+		for(int it2 = 0; it2 < BOARD_SIZE; ++it2)
+			text.push_back(char(int('0') + board[it2][it1]));
+	}
+
+	IA_com_->Write(text);
+	IA_com_->Read(text);
+	std::cout << "IA play : " << text << std::endl;
+
+	return std::tuple<int, int>(int(text[0] - 'a'), int(text[1] - '1'));
 }
 
