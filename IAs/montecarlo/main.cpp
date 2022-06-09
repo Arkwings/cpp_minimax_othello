@@ -4,6 +4,7 @@
 
 #include "othello.hpp"
 #include "heuristic.hpp"
+#include "montecarlo.hpp"
 #include "named_pipe.hpp"
 
 int main()
@@ -34,7 +35,7 @@ int main()
 		//std::cout << std::endl << std::endl;
 
 		//send heuri
-		IA_pipe.Write(heuristics(board, player));
+		IA_pipe.Write(montecarlo(board, player, time));
 	}
 
 	for(int i = 0; i < BOARD_SIZE; ++i) delete board[i];
