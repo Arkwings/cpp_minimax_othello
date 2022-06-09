@@ -162,19 +162,34 @@ const std::string heuristics(int** board, const int& color)
     std::vector<int> moves = PossibleMoves(board, color);
     std::string coord("");
 
+	int** board_copy = new int*[BOARD_SIZE];
+	for(int i = 0; i < BOARD_SIZE; ++i) board_copy[i] = new int[BOARD_SIZE];
+
     for(int z = 0; z < moves.size(); z+=2)
     {
-        board[moves[z]][moves[z+1]] = color;
-        int heuri = heuristic(board, color);
+        //reset
+        for(int y = 0; y < BOARD_SIZE; ++y)
+        {
+            for(int x = 0; x < BOARD_SIZE; ++x)
+            {
+                board_copy[x][y] = board[x][y];
+            }
+        }
+        //update
+        Update(board_copy, moves[z], moves[z+1], color);
+        
+        //get heuri
+        int heuri = heuristic(board_copy, color);
         if(heuri > value_save)
         {
             x_save = moves[z];
             y_save = moves[z+1];
             value_save = heuri;
         }
-
-        board[moves[z]][moves[z+1]] = 0;
     }
+
+    for(int i = 0; i < BOARD_SIZE; ++i) delete board_copy[i];
+	delete board_copy;
 
     coord.push_back(char(int('a') + x_save));
     coord.push_back(char(int('1') + y_save));
