@@ -128,13 +128,12 @@ void Othello::Update(const int& x, const int& y, const int& player)
 	}
 }
 
-template<class C>
 void Othello::Play(const std::vector<int>& moves, const int& player)
 {
 	bool valid_coords(false);
 	std::tuple<int, int> coords;
 	
-	system("clear");
+	//system("clear");
 	while(!valid_coords)
 	{
 		std::cout << *this << std::endl;	
@@ -143,7 +142,11 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 			std::cout << "[" << char(int('a') + moves[i]) << moves[i+1]+1 << "] ";
 		std::cout << std::endl;
 
-		coords = C::Play(moves, player, board_);
+		if(player == 1)
+			coords = (player_one_ == "human") ? Human::Play() : IA::Play(player, board_, idle_time_);
+		else
+			coords = (player_two_ == "human") ? Human::Play() : IA::Play(player, board_, idle_time_);
+
 		for(int i = 0; i < int(moves.size()); i+=2)
 		{
 			if(std::get<0>(coords) == moves[i] && std::get<1>(coords) == moves[i+1])
@@ -151,12 +154,10 @@ void Othello::Play(const std::vector<int>& moves, const int& player)
 		}
 		if(!valid_coords)
 			std::cerr << std::endl << error_col.start() << "coords [" << char(int('a') + std::get<0>(coords)) << std::get<1>(coords) + 1 << "] are not valid, please choose something else" << error_col.end() << std::endl;
-		std::this_thread::sleep_for(std::chrono::seconds(idle_time_));	
+		//std::this_thread::sleep_for(std::chrono::seconds(idle_time_));	
 	}
 	Update(std::get<0>(coords), std::get<1>(coords), player);
 }
-template void Othello::Play<Human>(const std::vector<int>& moves, const int& player);
-template void Othello::Play<IA>(const std::vector<int>& moves, const int& player);
 
 void Othello::winner() const
 {
@@ -192,8 +193,8 @@ bool Othello::Loop()
 		{
 			passed = false;
 
-			if(player_type == "human")		Play<Human>(moves, player);
-			else							Play<IA>(moves, player);
+			if(player_type == "human")		Play(moves, player);
+			else							Play(moves, player);
 		}
 		else
 		{

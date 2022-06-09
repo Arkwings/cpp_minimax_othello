@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"makefile.launchConfigurations": [
+			{
+				"cwd": "/home/arkwings/Desktop/projects/cpp_minimax_othello/debug",
+				"binaryPath": "/home/arkwings/Desktop/projects/cpp_minimax_othello/debug/Othello",
+				"binaryArgs": []
+			}
+		]
+	}
+}

@@ -59,7 +59,7 @@ int argument_checks(const int& count, char ** arguments)
 int main(int argc, char * argv[])
 {
         if(argument_checks(argc, &argv[0])) return 1;
-        Othello* game = new Othello(std::string(argv[1]), std::string(argv[2]), argc >= 4 ? int(argv[3][0] - '0'): 0);
+        Othello* game = new Othello(std::string(argv[1]), std::string(argv[2]), argc >= 4 ? int(argv[3][0] - '0'): 1);
         game->Loop();
 	return 0;
 }

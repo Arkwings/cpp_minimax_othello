@@ -12,8 +12,7 @@ int main()
 	int** board = new int*[BOARD_SIZE];
 	for(int i = 0; i < BOARD_SIZE; ++i) board[i] = new int[BOARD_SIZE];
 	std::string text, heuri;
-	int player(0);
-	//int time(0); //not used with heuri
+	int player(0), time(0);
 
 	while(1)
 	{
@@ -22,7 +21,7 @@ int main()
 		//std::cout << text << std::endl;
 		
 		player = int(text[0] - '0');
-		//time = int(text[1] - '0'); //not used with heuri
+		time = int(text[1] - '0');
 		//std::cout << player << std::endl;
 		for(int y = 0; y < BOARD_SIZE; ++y)
 		{

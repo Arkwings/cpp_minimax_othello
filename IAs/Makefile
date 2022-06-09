@@ -1,4 +1,4 @@
-IAS=heuri
+IAS=heuri montecarlo
 
 #DEBUG1
 DBGIAS = $(addprefix dbg/, $(IAS))
@@ -12,8 +12,8 @@ debug : $(DBGIAS)
 clean: $(CLNIAS)
 
 dbg/%:
-	cd $(notdir $@) && make debug
+	cd $(notdir $@) && $(MAKE) debug
 rel/%:
-	cd $(notdir $@) && make release
+	cd $(notdir $@) && $(MAKE) release
 cln/%:
-	cd $(notdir $@) && make clean
+	cd $(notdir $@) && $(MAKE) clean

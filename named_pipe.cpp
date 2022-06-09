@@ -35,7 +35,7 @@ void Pipe::Write(const std::string& text)
 
             if(str_it == text.end())    break;
         }
-        write(fd, text_array_, array_it);
+        if( write(fd, text_array_, array_it) < 0) std::cerr << "write failed" << std::endl;
     }
     close(fd);
 }
@@ -46,7 +46,7 @@ void Pipe::Read(std::string& text)
     text.clear();
     for(int it=0; it < TEXT_ARRAY_LENGTH; ++it) text_array_[it] = '\0';
 
-    read(fd, text_array_, 2);
+    if(read(fd, text_array_, 2) < 0) std::cerr << "read failed" << std::endl;
     text.append(text_array_);
 
     close(fd);

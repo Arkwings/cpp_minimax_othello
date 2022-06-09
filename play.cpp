@@ -10,13 +10,13 @@
 
 Pipe* IA::IA_com_ = new Pipe("IA_named_pipe", 0777);
 
-std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& player, int** board)
+std::tuple<int, int> Human::Play()
 {
 	std::cout << "Play at: " << std::endl;
 	std::string input;
 	std::cin >> input;
 
-	system("clear");	
+	//system("clear");	
 
 	if(input.size() != 2)
 	{
@@ -32,11 +32,12 @@ std::tuple<int, int> Human::Play(const std::vector<int>& moves, const int& playe
 	return std::tuple<int, int>(int(input[0] - 'a'), int(input[1] - '1'));
 }
 
-std::tuple<int, int> IA::Play(const std::vector<int>& moves, const int& player, int** board)
+std::tuple<int, int> IA::Play(const int& player, int** board, const int& idle_time)
 {
 	std::string text;
 
 	text.push_back(char(int('0') + player));
+	text.push_back(char(int('0') + idle_time));
 	for(int it1 = 0; it1 < BOARD_SIZE; ++it1)
 	{
 		for(int it2 = 0; it2 < BOARD_SIZE; ++it2)
