@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-#include "heuristic.hpp"
+#include "montecarlo.hpp"
 #include "named_pipe.hpp"
 
 Pipe::Pipe(const std::string& filepath, const int& permission)

@@ -8,7 +8,6 @@
 #include <random>
 
 #include "othello.hpp"
-#include "heuristic.hpp"
 #include "montecarlo.hpp"
 
 //declaring everything here to reduce mem alloc time
@@ -20,6 +19,7 @@ int** new_board;
 int x, y, x2, y2, dir_it, move, move2, color_copy, points, iterations;
 bool end, passed, possible, oponent_found, propagate;
 
+//all in one ugly func to simulate quicker
 bool playRandomGame(const int& color)
 {
     move2 = -1; color_copy = color; points = 0;

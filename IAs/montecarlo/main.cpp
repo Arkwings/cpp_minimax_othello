@@ -3,7 +3,6 @@
 #include <vector>
 
 #include "othello.hpp"
-#include "heuristic.hpp"
 #include "montecarlo.hpp"
 #include "named_pipe.hpp"
 

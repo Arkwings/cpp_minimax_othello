@@ -2,7 +2,7 @@
 #include <string>
 
 #include "othello.hpp"
-#include "heuristic.hpp"
+#include "montecarlo.hpp"
 
 int directions[16] =
 {  1,  0 //droite
