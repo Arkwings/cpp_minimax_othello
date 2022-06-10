@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 
 #include <string>
 #include <vector>
@@ -10,34 +11,92 @@
 #include "heuristic.hpp"
 #include "montecarlo.hpp"
 
-std::mt19937 rng(time(NULL));
+//declaring everything here to reduce mem alloc time
+std::random_device rd;
+std::mt19937 rng(rd());
+std::vector<int> moves;
+std::vector<int> moves2;
+int** new_board;
+int x, y, x2, y2, dir_it, move, move2, color_copy, points, iterations;
+bool end, passed, possible, oponent_found, propagate;
 
-void copyArray(int ** board_src, int** board_dst)
+bool playRandomGame(const int& color)
 {
-    for(int y = 0; y < BOARD_SIZE; ++y)
-    {
-        for(int x = 0; x < BOARD_SIZE; ++x)
-        {
-            board_dst[x][y] = board_src[x][y];
-        }
-    }
-}
-
-bool playRandomGame(int ** board, const int& color)
-{
-	bool end(false), passed(false);
-    int move(-1), color_copy(color), points(0);
+    move2 = -1; color_copy = color; points = 0;
+	end = false; passed = false;
     
 	while(!end)
 	{	
-		const std::vector<int> moves = PossibleMoves(board, color_copy);
-        std::uniform_int_distribution<int> gen(0, moves.size()/2 - 1); // uniform, unbiased
+		moves2.clear();
+
+	    for(y = 0; y < BOARD_SIZE; ++y)
+	    {
+		    for(x = 0; x < BOARD_SIZE; ++x)
+		    {
+                possible = false;
+                if(new_board[x][y] == 0)
+                {
+	                for(dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)) && !possible; dir_it+=2)
+	                {
+		                oponent_found = false;
+		                for(x2 = x + directions[dir_it], y2 = y + directions[dir_it + 1]
+                        ; x2 > -1 && y2 > -1 && x2 < BOARD_SIZE && y2 < BOARD_SIZE
+                        ; x2 += directions[dir_it], y2 += directions[dir_it + 1])
+		                {
+			                if(new_board[x2][y2] == 0 || (new_board[x2][y2] == color_copy && oponent_found == false)) break;
+			                else if(new_board[x2][y2] == color_copy * -1) oponent_found = true;
+			                else 
+                            {
+                                possible = true;
+                                break;
+                            }
+		                }
+	                }
+                }
+
+			    if(possible)
+			    {
+				    moves2.push_back(x);
+				    moves2.push_back(y);
+			    }
+		    }
+	    }
+
+        std::uniform_int_distribution<int> gen(0, moves2.size()/2 - 1); // uniform, unbiased
 		
-		if(!moves.empty())
+		if(!moves2.empty())
 		{
 			passed = false;
-			move = gen(rng);
-            Update(board, moves[move*2], moves[move*2+1], color_copy);    //update the board
+			move2 = gen(rng);
+            
+            //update the board
+            x = moves2[move2*2];
+            y = moves2[move2*2 + 1];
+            new_board[x][y] = color_copy;
+
+	        for(dir_it = 0; dir_it < int(sizeof(directions) / sizeof(int)); dir_it+=2)
+	        {
+		        propagate = false;
+		        oponent_found = false;
+		        for(x2 = x + directions[dir_it], y2 = y + directions[dir_it + 1]
+                ; x2 > -1 && y2 > -1 && x2 < BOARD_SIZE && y2 < BOARD_SIZE
+                ; x2 += directions[dir_it], y2 += directions[dir_it + 1])
+		        {
+		    	    if(new_board[x2][y2] == 0 || (new_board[x2][y2] == color_copy && oponent_found == false)) break;
+		    	    else if(new_board[x2][y2] == color_copy * -1) oponent_found = true;
+		    	    else propagate = true;
+		        }
+		        if(propagate)
+		        {
+		    	    for(x2 = x + directions[dir_it], y2 = y + directions[dir_it + 1]
+                    ; x2 > -1 && y2 > -1 && x2 < BOARD_SIZE && y2 < BOARD_SIZE
+                    ; x2 += directions[dir_it], y2 += directions[dir_it + 1])	
+		    	    {
+		    		    if(new_board[x2][y2] == color_copy * -1)	new_board[x2][y2] = color_copy;
+		    		    else break;
+		    	    }
+		        }
+	        }
 		}
 		else
 		{
@@ -48,12 +107,10 @@ bool playRandomGame(int ** board, const int& color)
 		color_copy = -color_copy;
 	}
 
-	for(int it1 = 0; it1 < BOARD_SIZE; ++it1)
+	for(y = 0; y < BOARD_SIZE; ++y)
 	{
-		for(int it2 = 0; it2 < BOARD_SIZE; ++it2)
-		{
-			points += board[it2][it1];
-		}
+		for(x = 0; x < BOARD_SIZE; ++x)
+			points += new_board[x][y];
 	}
 
     if((color == 1 && points > 0) || (color == -1 && points < 0))    return true;
@@ -62,18 +119,15 @@ bool playRandomGame(int ** board, const int& color)
 
 const std::string montecarlo(int** board, const int& color, const int& IA_time)
 {
-    int** new_board = new int*[BOARD_SIZE];
-	for(int i = 0; i < BOARD_SIZE; ++i) new_board[i] = new int[BOARD_SIZE];
+    moves = PossibleMoves(board, color);
+    std::vector<int> accMoves(moves.size()/2);
+    std::vector<int> winMoves(moves.size()/2);
+    for(x = 0; x < int(accMoves.size()); ++x)    accMoves[x] = 0;
+    for(x = 0; x < int(winMoves.size()); ++x)    winMoves[x] = 0;
 
-    std::vector<int> possibleMoves(PossibleMoves(board, color));
-    std::vector<int> accMoves(possibleMoves.size()/2);
-    std::vector<int> winMoves(possibleMoves.size()/2);
-    for(int i = 0; i < int(accMoves.size()); ++i)    accMoves[i] = 0;
-    for(int i = 0; i < int(winMoves.size()); ++i)    winMoves[i] = 0;
-    std::uniform_int_distribution<int> gen(0, possibleMoves.size()/2 - 1); // uniform, unbiased
+    std::uniform_int_distribution<int> gen(0, moves.size()/2 - 1); // uniform, unbiased
 
-    int iterations(0);
-    int move(-1);
+    iterations = 0; move = -1;
     std::string coord("");
 
     time_t start_time(time(NULL));
@@ -85,11 +139,18 @@ const std::string montecarlo(int** board, const int& color, const int& IA_time)
 
     do
     {
-        copyArray(board, new_board);                                                //reste array
-        move = gen(rng);                                                            //pick move
-        Update(new_board, possibleMoves[move*2], possibleMoves[move*2+1], color);   //update the board
-        ++accMoves[move];                                                           //update this move counter
-        if(!playRandomGame(board, -color))    ++winMoves[move];                     //do a random game and update win counter
+        // for(y = 0; y < BOARD_SIZE; ++y)                                      //reset array
+        // {
+        //     for(x = 0; x < BOARD_SIZE; ++x)
+        //         new_board[x][y] = board[x][y];
+        // }  
+        for(y = 0; y < BOARD_SIZE; ++y)                                         //reset array, best ?
+            memcpy(new_board[y], board[y], BOARD_SIZE*sizeof(int));
+
+        move = gen(rng);                                                        //pick move
+        Update(new_board, moves[move*2], moves[move*2+1], color);               //update the board
+        ++accMoves[move];                                                       //update this move counter
+        if(!playRandomGame(-color))    ++winMoves[move];                        //do a random game and update win counter
 
         moving_time = time(NULL);
         if(++iterations == 1)   iteration_time = moving_time - start_time;
@@ -97,23 +158,22 @@ const std::string montecarlo(int** board, const int& color, const int& IA_time)
 
     std::cout << "montecarlo end time: " << ctime(&end_time) << std::endl;
 
-    for(int i = 0; i < BOARD_SIZE; ++i) delete new_board[i];
-    delete new_board;
-
     float best(-1);
     int best_index(-1);
 
-    for(int i = 0; i < int(accMoves.size()); ++i)
+    for(x = 0; x < int(accMoves.size()); ++x)
     {
-        float value = float(winMoves[i]) / float(accMoves[i]);
+        float value = float(winMoves[x]) / float(accMoves[x]);
         if(value > best)
         {
           best = value;
-          best_index = i;
+          best_index = x;
         }
     }
 
-    coord.push_back(char(int('a') + possibleMoves[best_index*2]));
-    coord.push_back(char(int('1') + possibleMoves[best_index*2+1]));
+    for(x = 0; x < int(accMoves.size()); ++x)   std::cout << winMoves[x] << " / " << accMoves[x] << std::endl;
+
+    coord.push_back(char(int('a') + moves[best_index*2]));
+    coord.push_back(char(int('1') + moves[best_index*2+1]));
     return coord;
 }

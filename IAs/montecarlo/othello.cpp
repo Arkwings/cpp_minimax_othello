@@ -50,6 +50,24 @@ const std::vector<int> PossibleMoves(int** board, const int& player)
 	return moves;
 }
 
+const std::vector<int> PossibleMovesOptimized(int** board, const int& player)
+{
+	std::vector<int> moves;
+
+	for(int y = 0; y < BOARD_SIZE; ++y)
+	{
+		for(int x = 0; x < BOARD_SIZE; ++x)
+		{
+			if(possibleMove(board, x, y, player))
+			{
+				moves.push_back(x);
+				moves.push_back(y);
+			}
+		}
+	}
+	return moves;
+}
+
 void Update(int** board, const int& x, const int& y, const int& player)
 {
 	board[x][y] = player;

@@ -12,6 +12,9 @@ int main()
 	Pipe IA_pipe("IA_named_pipe", 0777);
 	int** board = new int*[BOARD_SIZE];
 	for(int i = 0; i < BOARD_SIZE; ++i) board[i] = new int[BOARD_SIZE];
+	new_board = new int*[BOARD_SIZE];
+	for(int i = 0; i < BOARD_SIZE; ++i) new_board[i] = new int[BOARD_SIZE];
+	
 	std::string text, heuri;
 	int player(0), time(0);
 
@@ -38,6 +41,8 @@ int main()
 		IA_pipe.Write(montecarlo(board, player, time));
 	}
 
+    for(int i = 0; i < BOARD_SIZE; ++i) delete new_board[i];
+    delete new_board;
 	for(int i = 0; i < BOARD_SIZE; ++i) delete board[i];
 	delete board;
 
